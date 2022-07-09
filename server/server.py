@@ -2,7 +2,9 @@ import socket
 from tempfile import NamedTemporaryFile
 
 SERVER_ADDRESS = ("0.0.0.0", 8080)
-BUFFER_SIZE = 1024 * 10
+BUFFER_SIZE = 1024 // 2
+FINISHED_MESSAGE = b"DONE"
+FILE_COMPLETED = b"COMPLETED"
 
 
 class Server:
@@ -27,15 +29,28 @@ class Server:
     def listen(self):
         """Listen for connections."""
         self.sock.listen()
-        file = NamedTemporaryFile(mode="w+t")
         while True:
             conn, client_address = self.sock.accept()
             print("‍💼 Received connection from SERVER...", client_address)
             message = conn.recv(BUFFER_SIZE)
+            file = NamedTemporaryFile(mode="w+t")
 
             while message:
-                print("Receiving...")
+                if str(message) == str(FINISHED_MESSAGE):
+                    print("All Files Received")
+                    break
+
+                if str(message) == str(FILE_COMPLETED):
+                    print("File Received")
+                    # TODO: Salvar arquivo no cassandra
+                    file.close()
+                    file = NamedTemporaryFile(mode="w+t")
+                    message = b""
+                    response_data = "OK"
+                    conn.send(str(response_data).encode())
+
                 message = message.decode("utf-8")
+                print("Receiving...")
                 file.write(message)
                 message = conn.recv(BUFFER_SIZE)
 
