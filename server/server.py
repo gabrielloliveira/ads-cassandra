@@ -29,6 +29,7 @@ class Server:
     def listen(self):
         """Listen for connections."""
         self.sock.listen()
+        # TODO: pegar o consumo de memória e cpu
         while True:
             conn, client_address = self.sock.accept()
             print("‍💼 Received connection from SERVER...", client_address)
@@ -54,7 +55,6 @@ class Server:
                 file.write(message)
                 message = conn.recv(BUFFER_SIZE)
 
-            # TODO: Salvar o arquivo no cassandra
             file.close()
             response_data = "OK"
             conn.send(str(response_data).encode())
