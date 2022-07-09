@@ -1,7 +1,7 @@
 import socket
 from tempfile import NamedTemporaryFile
 
-SERVER_ADDRESS = ("0.0.0.0", 80)
+SERVER_ADDRESS = ("0.0.0.0", 8080)
 BUFFER_SIZE = 1024 * 10
 
 
@@ -35,6 +35,7 @@ class Server:
 
             while message:
                 print("Receiving...")
+                message = message.decode("utf-8")
                 file.write(message)
                 message = conn.recv(BUFFER_SIZE)
 

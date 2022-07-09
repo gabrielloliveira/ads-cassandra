@@ -8,8 +8,9 @@ def execute():
     while True:
         try:
             client.send_message(message_random)
-        except:
-            execute()
+        except Exception as e:
+            print("Exception:", e)
+            # execute()
 
 
 if __name__ == "__main__":
