@@ -1,7 +1,7 @@
 import socket
 from tempfile import NamedTemporaryFile
 
-SERVER_ADDRESS = ("localhost", 80)
+SERVER_ADDRESS = ("0.0.0.0", 80)
 BUFFER_SIZE = 1024 * 10
 
 
