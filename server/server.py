@@ -1,10 +1,14 @@
 import socket
 from tempfile import NamedTemporaryFile
+from .cassandra import CassandraDriver
 
 SERVER_ADDRESS = ("0.0.0.0", 8080)
 BUFFER_SIZE = 1024 // 2
 FINISHED_MESSAGE = b"DONE"
 FILE_COMPLETED = b"COMPLETED"
+
+
+bd = CassandraDriver()
 
 
 class Server:
@@ -34,7 +38,7 @@ class Server:
             conn, client_address = self.sock.accept()
             print("‍💼 Received connection from SERVER...", client_address)
             message = conn.recv(BUFFER_SIZE)
-            file = NamedTemporaryFile(mode="w+t")
+            file_parts = []
 
             while message:
                 if str(message) == str(FINISHED_MESSAGE):
@@ -43,18 +47,17 @@ class Server:
 
                 if str(message) == str(FILE_COMPLETED):
                     print("File Received")
-                    # TODO: Salvar arquivo no cassandra
-                    file.close()
-                    file = NamedTemporaryFile(mode="w+t")
+                    file_data = "".join(file_parts)
+                    bd.create(file_data=file_data.encode())
+                    file_parts = []
                     message = b""
-                    response_data = "OK"
-                    conn.send(str(response_data).encode())
+                    conn.send("OK".encode())
 
                 message = message.decode("utf-8")
                 print("Receiving...")
-                file.write(message)
+                file_parts.append(message)
                 message = conn.recv(BUFFER_SIZE)
 
-            file.close()
+            file_parts = []
             response_data = "OK"
             conn.send(str(response_data).encode())
