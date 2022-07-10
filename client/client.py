@@ -21,7 +21,6 @@ class Client:
         self.qtd_files = kwargs.get("qtd_files")
         self.file_size = kwargs.get("file_size")
         self.rate = kwargs.get("rate")
-        # TODO: Implementar a contagem de segundos
 
     def send_message(self):
         list_files = self.__prepare_files()
@@ -49,6 +48,7 @@ class Client:
             final_time = time.time() - start_time
             print(f"📨 Received response: {message} in {final_time} seconds")
             logging.info(f"RESPONSE-TIME={final_time}")
+            time.sleep(self.rate)
 
         server.send(FINISHED_MESSAGE)
         server.recv(BUFFER_SIZE)
