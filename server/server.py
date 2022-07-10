@@ -1,5 +1,7 @@
 import socket
-from tempfile import NamedTemporaryFile
+
+import psutil
+
 from .cassandra import CassandraDriver
 
 SERVER_ADDRESS = ("0.0.0.0", 8080)
@@ -33,7 +35,6 @@ class Server:
     def listen(self):
         """Listen for connections."""
         self.sock.listen()
-        # TODO: pegar o consumo de memória e cpu
         while True:
             conn, client_address = self.sock.accept()
             print("‍💼 Received connection from SERVER...", client_address)
@@ -49,12 +50,16 @@ class Server:
                     print("File Received")
                     file_data = "".join(file_parts)
                     bd.create(file_data=file_data.encode())
+
+                    # CPU AND RAM LOGS
+                    print("🚀 CPU USAGE %", psutil.cpu_percent())
+                    print("🚀 RAM USAGE %", psutil.virtual_memory()[2])
+
                     file_parts = []
                     message = b""
                     conn.send("OK".encode())
 
                 message = message.decode("utf-8")
-                print("Receiving...")
                 file_parts.append(message)
                 message = conn.recv(BUFFER_SIZE)
 
