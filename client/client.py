@@ -21,6 +21,7 @@ class Client:
         self.qtd_files = kwargs.get("qtd_files")
         self.file_size = kwargs.get("file_size")
         self.rate = kwargs.get("rate")
+        # TODO: Implementar a contagem de segundos
 
     def send_message(self):
         list_files = self.__prepare_files()

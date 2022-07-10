@@ -3,6 +3,9 @@ import uuid
 from cassandra.cluster import Cluster, PlainTextAuthProvider
 from decouple import config
 
+# TODO: Implementar verificação se a tabela existe. caso não exista, executar os comandos que estão no arquivo script.sql
+# TODO: Setar o host dentro do cluster: Cluster([host], auth_provider=self.auth_provider)
+
 
 class CassandraDriver:
     def __init__(self):
