@@ -1,3 +1,4 @@
+import logging
 import os
 import socket
 import time
@@ -9,6 +10,9 @@ BUFFER_SIZE = 1024 * 1
 ONE_MB = 1024 * 1024
 FINISHED_MESSAGE = b"DONE"
 COMPLETED_FILE = b"COMPLETED"
+
+
+logging.basicConfig(filename="client.log", encoding="utf-8", level=logging.INFO)
 
 
 class Client:
@@ -43,6 +47,7 @@ class Client:
             message = response.decode("utf-8")
             final_time = time.time() - start_time
             print(f"📨 Received response: {message} in {final_time} seconds")
+            logging.info(f"RESPONSE-TIME={final_time}")
 
         server.send(FINISHED_MESSAGE)
         server.recv(BUFFER_SIZE)

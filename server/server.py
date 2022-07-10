@@ -1,6 +1,7 @@
 import socket
 
 import psutil
+import logging
 
 from .cassandra import CassandraDriver
 
@@ -11,6 +12,9 @@ FILE_COMPLETED = b"COMPLETED"
 
 
 bd = CassandraDriver()
+
+
+logging.basicConfig(filename="server.log", encoding="utf-8", level=logging.INFO)
 
 
 class Server:
@@ -52,8 +56,13 @@ class Server:
                     bd.create(file_data=file_data.encode())
 
                     # CPU AND RAM LOGS
-                    print("🚀 CPU USAGE %", psutil.cpu_percent())
-                    print("🚀 RAM USAGE %", psutil.virtual_memory()[2])
+                    cpu_percent = psutil.cpu_percent()
+                    ram_percent = psutil.virtual_memory()[2]
+
+                    print("🚀 CPU USAGE %", cpu_percent)
+                    print("🚀 RAM USAGE %", ram_percent)
+                    logging.info(f"CPU-USAGE={cpu_percent}")
+                    logging.info(f"RAM-USAGE={ram_percent}")
 
                     file_parts = []
                     message = b""
